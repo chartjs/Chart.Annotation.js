@@ -61,6 +61,56 @@ To configure the annotations plugin, you can simply add new config options to yo
 }
 ```
 
+### Label Definition
+This is the definition of the `label` model for line and box annotations.
+
+````javascript
+label: {
+    // Background color of label, default below
+    backgroundColor: 'rgba(0,0,0,0.8)',
+
+    // Font family of text, inherits from global
+    fontFamily: "sans-serif",
+
+    // Font size of text, inherits from global
+    fontSize: 12,
+
+    // Font style of text, default below
+    fontStyle: "bold",
+
+    // Font color of text, default below
+    fontColor: "#fff",
+
+    // Padding of label to add left/right, default below
+    xPadding: 6,
+
+    // Padding of label to add top/bottom, default below
+    yPadding: 6,
+
+    // Radius of label rectangle, default below
+    cornerRadius: 6,
+
+    // Anchor position of label on line, can be one of: top, bottom, left, right, center. Default below.
+    position: "center",
+
+    // Adjustment along x-axis (left-right) of label relative to above number (can be negative)
+    // For horizontal lines positioned left or right, negative values move
+    // the label toward the edge, and positive values toward the center.
+    xAdjust: 0,
+
+    // Adjustment along y-axis (top-bottom) of label relative to above number (can be negative)
+    // For vertical lines positioned top or bottom, negative values move
+    // the label toward the edge, and positive values toward the center.
+    yAdjust: 0,
+
+    // Whether the label is enabled and should be displayed
+    enabled: false,
+
+    // Text to display in label - default is null. Provide an array to display values on a new line
+    content: "Test label"
+}
+````
+
 ### Line Annotations
 Vertical or horizontal lines are supported.
 
@@ -101,49 +151,8 @@ Vertical or horizontal lines are supported.
 	borderDashOffset: 5,
 
 	label: {
-		// Background color of label, default below
-		backgroundColor: 'rgba(0,0,0,0.8)',
-
-		// Font family of text, inherits from global
-		fontFamily: "sans-serif",
-
-		// Font size of text, inherits from global
-		fontSize: 12,
-
-		// Font style of text, default below
-		fontStyle: "bold",
-
-		// Font color of text, default below
-		fontColor: "#fff",
-
-		// Padding of label to add left/right, default below
-		xPadding: 6,
-
-		// Padding of label to add top/bottom, default below
-		yPadding: 6,
-
-		// Radius of label rectangle, default below
-		cornerRadius: 6,
-
-		// Anchor position of label on line, can be one of: top, bottom, left, right, center. Default below.
-		position: "center",
-
-		// Adjustment along x-axis (left-right) of label relative to above number (can be negative)
-		// For horizontal lines positioned left or right, negative values move
-		// the label toward the edge, and positive values toward the center.
-		xAdjust: 0,
-
-		// Adjustment along y-axis (top-bottom) of label relative to above number (can be negative)
-		// For vertical lines positioned top or bottom, negative values move
-		// the label toward the edge, and positive values toward the center.
-		yAdjust: 0,
-
-		// Whether the label is enabled and should be displayed
-		enabled: false,
-
-		// Text to display in label - default is null. Provide an array to display values on a new line
-		content: "Test label"
-	},
+	  // see label definition section
+        },
 
 	// Mouse event handlers - be sure to enable the corresponding events in the
 	// annotation events array or the event handler will not be called.
@@ -205,6 +214,10 @@ The 4 coordinates, xMin, xMax, yMin, yMax are optional. If not specified, the bo
 	// Fill color
 	backgroundColor: 'green',
 
+	label: {
+	  // see label definition section
+        },
+
 	// Mouse event handlers - be sure to enable the corresponding events in the
 	// annotation events array or the event handler will not be called.
 	// See https://developer.mozilla.org/en-US/docs/Web/Events for a list of
@@ -227,7 +240,6 @@ The 4 coordinates, xMin, xMax, yMin, yMax are optional. If not specified, the bo
 
 The following features still need to be done:
 
-* Box annotation labels
 * Point annotations
 * Text annotations
 

@@ -2,10 +2,28 @@
 module.exports = function(Chart) {
 	/* eslint-disable global-require */
 	var helpers = require('../helpers.js')(Chart);
+	var labelUtil = require('../labelUtil.js');
+	var chartHelpers = Chart.helpers;
 	/* eslint-enable global-require */
 
-	var BoxAnnotation = Chart.Annotation.Element.extend({
-		setDataLimits: function() {
+	function BoxFunction(view) {
+		this.type = 'box';
+
+		// Describe the box as left, right, bottom and top values
+
+		this.getX = function() {
+			// get centered x coordinate of the box
+			return (view.left + view.right) / 2;
+		};
+
+		this.getY = function() {
+			// get centered y coordinate of the box
+			return (view.bottom + view.top) / 2;
+		};
+	}
+
+	return Chart.Annotation.Element.extend({
+		setDataLimits: function () {
 			var model = this._model;
 			var options = this.options;
 			var chartInstance = this.chartInstance;
@@ -44,7 +62,7 @@ module.exports = function(Chart) {
 				};
 			}
 		},
-		configure: function() {
+		configure: function () {
 			var model = this._model;
 			var options = this.options;
 			var chartInstance = this.chartInstance;
@@ -52,6 +70,7 @@ module.exports = function(Chart) {
 			var xScale = chartInstance.scales[options.xScaleID];
 			var yScale = chartInstance.scales[options.yScaleID];
 			var chartArea = chartInstance.chartArea;
+			var ctx = chartInstance.chart.ctx;
 
 			// clip annotations to the chart area
 			model.clip = {
@@ -88,38 +107,47 @@ module.exports = function(Chart) {
 			model.right = right;
 			model.bottom = bottom;
 
+			// Figure out the label:
+			var labelConfig = labelUtil.getLabelConfig({
+				x1: left,
+				x2: right,
+				y1: top,
+				y2: bottom
+			}, new BoxFunction(model), options, chartHelpers, ctx);
+			Object.assign(model, labelConfig.model);
+			Object.keys(labelConfig.ctx).forEach(function (ctxKey) {
+				ctx[ctxKey] = labelConfig.ctx[ctxKey];
+			});
+
 			// Stylistic options
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
 			model.backgroundColor = options.backgroundColor;
 		},
-		inRange: function(mouseX, mouseY) {
+		inRange: function (mouseX, mouseY) {
 			var model = this._model;
-			return model &&
+			return (model &&
 				mouseX >= model.left &&
 				mouseX <= model.right &&
 				mouseY >= model.top &&
-				mouseY <= model.bottom;
+				mouseY <= model.bottom) || labelUtil.isOnLabel(mouseX, mouseY, model);
 		},
-		getCenterPoint: function() {
+		getCenterPoint: function () {
 			var model = this._model;
-			return {
-				x: (model.right + model.left) / 2,
-				y: (model.bottom + model.top) / 2
-			};
+			return labelUtil.getCenterPoint(model.left, model.right, model.bottom, model.top);
 		},
-		getWidth: function() {
+		getWidth: function () {
 			var model = this._model;
 			return Math.abs(model.right - model.left);
 		},
-		getHeight: function() {
+		getHeight: function () {
 			var model = this._model;
 			return Math.abs(model.bottom - model.top);
 		},
-		getArea: function() {
+		getArea: function () {
 			return this.getWidth() * this.getHeight();
 		},
-		draw: function() {
+		draw: function () {
 			var view = this._view;
 			var ctx = this.chartInstance.chart.ctx;
 
@@ -140,9 +168,9 @@ module.exports = function(Chart) {
 			ctx.fillRect(view.left, view.top, width, height);
 			ctx.strokeRect(view.left, view.top, width, height);
 
+			labelUtil.drawLabel(view, ctx, chartHelpers);
+
 			ctx.restore();
 		}
 	});
-
-	return BoxAnnotation;
 };

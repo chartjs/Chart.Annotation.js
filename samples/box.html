@@ -140,6 +140,13 @@
 							backgroundColor: 'rgba(101, 33, 171, 0.5)',
 							borderColor: 'rgb(101, 33, 171)',
 							borderWidth: 1,
+							label: {
+								position: 'bottom',
+								yAdjust: 10,
+								backgroundColor: 'red',
+								content: 'This is a long test label',
+								enabled: true
+							},
 							onDblclick: function(e) {
 								console.log('Box', e.type, this);
 							}
