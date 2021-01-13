@@ -306,6 +306,31 @@ module.exports = function(Chart) {
 			ctx.lineTo(x2, y2);
 			ctx.stroke();
 
+			ctx.restore();
+		},
+		drawLabel: function() {
+			var view = this._view;
+			var ctx = this.chartInstance.chart.ctx;
+
+			if (!view.clip) {
+				return;
+			}
+
+			ctx.save();
+
+			// Canvas setup
+			ctx.beginPath();
+			ctx.rect(view.clip.x1, view.clip.y1, view.clip.x2 - view.clip.x1, view.clip.y2 - view.clip.y1);
+			ctx.clip();
+
+			ctx.lineWidth = view.borderWidth;
+			ctx.strokeStyle = view.borderColor;
+
+			if (ctx.setLineDash) {
+				ctx.setLineDash(view.borderDash);
+			}
+			ctx.lineDashOffset = view.borderDashOffset;
+
 			if (view.labelEnabled && view.labelContent) {
 				ctx.beginPath();
 				ctx.rect(view.clip.x1, view.clip.y1, view.clip.x2 - view.clip.x1, view.clip.y2 - view.clip.y1);

@@ -21,14 +21,19 @@ module.exports = function(Chart) {
 		return function(chartInstance, easingDecimal) {
 			var defaultDrawTime = chartInstance.annotation.options.drawTime;
 
-			helpers.elements(chartInstance)
+			var elements = helpers.elements(chartInstance)
 				.filter(function(element) {
 					return drawTime === (element.options.drawTime || defaultDrawTime);
-				})
-				.forEach(function(element) {
-					element.configure();
-					element.transition(easingDecimal).draw();
 				});
+
+			// Draw our box/line first, then the labels, so the labels will be on top.
+			elements.forEach(function(element) {
+				element.configure();
+				element.transition(easingDecimal).draw();
+			});
+			elements.forEach(function(element) {
+				element.transition(easingDecimal).drawLabel();
+			});
 		};
 	}
 

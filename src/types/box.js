@@ -147,6 +147,9 @@ module.exports = function(Chart) {
 			ctx.strokeRect(view.left, view.top, width, height);
 
 			ctx.restore();
+		},
+		drawLabel: function() {
+			// Box doesn't draw labels yet, but we add this for consistency of interfaces.
 		}
 	});
 
